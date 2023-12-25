@@ -1,39 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { CartItem } from '../cart.entities';
+// import { v4 } from 'uuid';
 
-import { v4 } from 'uuid';
-
-import { Cart } from '../models';
+import { Cart, CartStatuses } from '../models';
+import { Cart as CartEntity } from '../cart.entities'
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CartService {
   private userCarts: Record<string, Cart> = {};
 
-  findByUserId(userId: string): Cart {
-    return this.userCarts[ userId ];
+  constructor(
+    @InjectRepository(CartEntity)
+    private cartRepository: Repository<CartEntity>
+  ) {}
+
+  findByUserId(user_id: string): Promise<CartEntity> {
+    return this.cartRepository.findOneBy({ user_id });
   }
 
-  createByUserId(userId: string) {
-    const id = v4();
-    const userCart = {
-      id,
-      items: [],
-    };
+  createByUserId(user_id: string) {
+    const newCart = this.cartRepository.create({
+      user_id,
+      created_at: new Date(),
+      updated_at: new Date(),
+      status: CartStatuses.OPEN,
+    });
 
-    // @ts-ignore
-    this.userCarts[ userId ] = userCart;
-
-    return userCart;
+    return this.cartRepository.save(newCart);
   }
 
-  findOrCreateByUserId(userId: string): Cart {
-    const userCart = this.findByUserId(userId);
+  async findOrCreateByUserId(userId: string): Promise<CartEntity & { items: CartItem[] }> {
+    const userCart = await this.findByUserId(userId);
 
     if (userCart) {
-      return userCart;
+      return { ...userCart, items: [] };
     }
-
     // @ts-ignore
-    return this.createByUserId(userId);
+    const cart = await this.createByUserId(userId);
+    return { ...cart, items: [] }
   }
 
   updateByUserId(userId: string, { items }: Cart): Cart {

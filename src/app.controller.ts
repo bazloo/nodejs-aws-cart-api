@@ -14,10 +14,9 @@ export class AppController {
     };
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('api/auth/login')
   async login(@Request() req) {
-    const token = this.authService.login(req.user, 'basic');
+    const token = this.authService.login(req.body, 'basic');
 
     return  {
       statusCode: HttpStatus.OK,

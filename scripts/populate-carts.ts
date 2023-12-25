@@ -49,17 +49,17 @@ const populateCartItems = [
   `
     INSERT INTO cart_items (cart_id, product_id, count)
     VALUES
-      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 1)
+      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 1),
   `,
   `
     INSERT INTO cart_items (cart_id, product_id, count)
     VALUES
-      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 2)
+      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 2),
   `,
   `
     INSERT INTO cart_items (cart_id, product_id, count)
     VALUES
-      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 3)
+      ('{cartId}', '223e4567-e89b-12d3-a456-426614174007', 3),
   `,
 ]
 
@@ -83,6 +83,7 @@ client.connect()
 
     // Populate with data
     const results = await Promise.all(populateCarts.map((q) => client.query(q)));
+    // console.log(populateCartItems.map((q, i) => q.replace('{cartId}', results[i].rows[0].id)));
     await Promise.all(populateCartItems.map((q, i) => client.query(q.replace('{cartId}', results[i].rows[0].id))));
   })
   .then(() => console.log('Queries executed successfully'))

@@ -1,6 +1,6 @@
 import { Controller, Get, Delete, Put, Body, Req, Post, UseGuards, HttpStatus } from '@nestjs/common';
 
-// import { BasicAuthGuard, JwtAuthGuard } from '../auth';
+import { BasicAuthGuard, JwtAuthGuard } from '../auth';
 import { OrderService } from '../order';
 import { AppRequest, getUserIdFromRequest } from '../shared';
 
@@ -15,10 +15,10 @@ export class CartController {
   ) { }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Get()
-  findUserCart(@Req() req: AppRequest) {
-    const cart = this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
+  async findUserCart(@Req() req: AppRequest) {
+    const cart = await this.cartService.findOrCreateByUserId(getUserIdFromRequest(req));
 
     return {
       statusCode: HttpStatus.OK,
@@ -56,7 +56,7 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Post('checkout')
   checkout(@Req() req: AppRequest, @Body() body) {
     const userId = getUserIdFromRequest(req);
