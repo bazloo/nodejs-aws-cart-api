@@ -6,7 +6,7 @@ import { CartModule } from './cart/cart.module';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Cart } from './cart/cart.entities';
+import { Cart, CartItem } from './cart/cart.entities';
 
 @Module({
   imports: [
@@ -20,9 +20,8 @@ import { Cart } from './cart/cart.entities';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-      entities: [Cart],
+      synchronize: false,
+      entities: [Cart, CartItem],
       ssl: {
         rejectUnauthorized: false,
       }

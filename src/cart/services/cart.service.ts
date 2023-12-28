@@ -42,19 +42,19 @@ export class CartService {
     return { ...cart, items: [] }
   }
 
-  updateByUserId(userId: string, { items }: Cart): Cart {
-    const { id, ...rest } = this.findOrCreateByUserId(userId);
-
-    const updatedCart = {
-      id,
-      ...rest,
-      items: [ ...items ],
-    }
-
-    this.userCarts[ userId ] = { ...updatedCart };
-
-    return { ...updatedCart };
-  }
+  // updateByUserId(userId: string, { items }: Cart): Cart {
+  //   const { id, ...rest } = this.findOrCreateByUserId(userId);
+  //
+  //   const updatedCart = {
+  //     id,
+  //     ...rest,
+  //     items: [ ...items ],
+  //   }
+  //
+  //   this.userCarts[ userId ] = { ...updatedCart };
+  //
+  //   return { ...updatedCart };
+  // }
 
   removeByUserId(userId): void {
     this.userCarts[ userId ] = null;
